@@ -1,0 +1,12 @@
+%-------------------------------------------------------------------------------
+% UF Sparse Matrix Collection, Tim Davis
+% http://www.cise.ufl.edu/research/sparse/matrices/Boeing/msc04515
+% name: Boeing/msc04515
+% [SYMMETRIC TEST MATRIX FROM MSC/NASTRAN B30F8.OUT2]
+% id: 360
+% date: 1995
+% author: R. Grimes
+% ed: T. Davis
+% fields: title A name id date author ed kind
+% kind: structural problem
+%-------------------------------------------------------------------------------

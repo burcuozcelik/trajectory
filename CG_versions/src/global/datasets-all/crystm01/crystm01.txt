@@ -1,0 +1,12 @@
+%-------------------------------------------------------------------------------
+% UF Sparse Matrix Collection, Tim Davis
+% http://www.cise.ufl.edu/research/sparse/matrices/Boeing/crystm01
+% name: Boeing/crystm01
+% [FEM CRYSTAL FREE VIBRATION MASS MATRIX]
+% id: 353
+% date: 1995
+% author: R. Grimes
+% ed: T. Davis
+% fields: title A name id date author ed kind
+% kind: materials problem
+%-------------------------------------------------------------------------------

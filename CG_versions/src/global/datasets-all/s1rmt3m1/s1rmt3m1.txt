@@ -1,0 +1,49 @@
+%-------------------------------------------------------------------------------
+% UF Sparse Matrix Collection, Tim Davis
+% http://www.cise.ufl.edu/research/sparse/matrices/Cylshell/s1rmt3m1
+% name: Cylshell/s1rmt3m1
+% [FEM, cylindrical shell, 30x30 tri.  mesh, stabilized MITC3 elements, R/t=10]
+% id: 1608
+% date: 1997
+% author: R. Kouhia
+% ed: R. Boisvert, R. Pozo, K. Remington, B. Miller, R. Lipman, R. Barrett, J. Dongarra
+% fields: name title date author A Zeros notes id ed kind aux
+% aux: coord
+% kind: structural problem
+%-------------------------------------------------------------------------------
+% notes:
+% %                                                                              
+% %FILE  s1rmt3m1.mtx                                                            
+% %TITLE Cyl shell R/t=10 unif 30x30 trian mesh stab MITC3 elem with drill rot   
+% %KEY   s1rmt3m1                                                                
+% %                                                                              
+% %                                                                              
+% %CONTRIBUTOR Reijo Kouhia (reijo.kouhia@hut.fi)                                
+% %                                                                              
+% %BEGIN DESCRIPTION                                                             
+% % Matrix from a static analysis of a cylindrical shell                         
+% % Radius to thickness ratio R/t = 10                                           
+% % Length to radius ratio    R/L = 1                                            
+% % One octant discretized with uniform 30 x 30 triangular mesh                  
+% % element:                                                                     
+% % facet-type shell element where the bending part is formulated                
+% % using the stabilized MITC theory (stabilization paramater 0.4)               
+% % the membrane part includes drilling rotations using                          
+% % the Hughes-Brezzi formulation with (regularizing parameter = G/1000,         
+% % where G is the shear modulus)                                                
+% % full 3-point integration                                                     
+% % --------------------------------------------------------------------------   
+% % Note:                                                                        
+% % The sparsity pattern of the matrix is determined from the element            
+% % connectivity data assuming that the element matrix is full.                  
+% % Since this case the  material model is linear isotropically elastic          
+% % and the FE mesh is  uniform there exist some zeros.                          
+% % Since the removal of those zero elements is trivial                          
+% % but the reconstruction of the current sparsity                               
+% % pattern is impossible from the sparsified structure without any further      
+% % knowledge of the element connectivity, the zeros are retained in this file.  
+% % ---------------------------------------------------------------------------  
+% %END DESCRIPTION                                                               
+% %                                                                              
+% %                                                                              
+%-------------------------------------------------------------------------------

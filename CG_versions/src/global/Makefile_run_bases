@@ -1,0 +1,63 @@
+CC = g++
+
+ifndef SRC_HOME
+$(error SRC_HOME needs to be defined)
+endif
+
+ifndef AIDHOME
+$(error AIDHOME needs to be defined)
+endif
+
+ifndef MPILIB
+$(error MPILIB needs to be defined)
+endif
+
+CFLAGS = -I$(SRC_HOME)/readRB/ -I$(SRC_HOME)/inc -I$(SRC_HOME)/SparseLib++/1.7/include -I$(SRC_HOME)/SparseLib++/1.7/mv/include -std=c++11 '-DMCOMPLEX=std::complex<double>' '-DCOMPLEX=std::complex<double>' -g -O2 -DNO_RHS -DINSERT_MULTIBF_FAULT
+#-DINSERT_SINGLEBF_FAULT
+#-DINSERT_MULTIBF_FAULT
+LFLAGS = -L$(SRC_HOME)/SparseLib++/1.7/lib -lsparse -lspblas -lmv -lm
+RB_SRC = $(SRC_HOME)/readRB/ioRB.cc
+ISET_SRC = insert.c
+#METHODS = cg bicg bicgsta cgs iccg
+METHODS = cg
+
+all: detectors_def
+
+detectors_def:   $(METHODS) 
+detectors_aid:   $(addsuffix _aid,$(METHODS))
+detectors_gagan: $(addsuffix _gagan,$(METHODS))
+detectors_orth:  cg_orth 
+detectors_ssd: $(addsuffix _ssd,$(METHODS))
+detectors_newsum:   $(addsuffix _newsum,$(METHODS))
+detectors_svm:   $(addsuffix _svm,$(METHODS))
+detectors_collect:   $(addsuffix _collect,$(METHODS))
+
+$(METHODS): res_testing_cg.cc
+	$(CC) -DVERIFY $(addprefix -Df,$(shell echo $@ | tr a-z A-Z)) -o $@ res_testing_cg.cc $(RB_SRC) $(CFLAGS) -I$(SRC_HOME)/inc/$@ $(LFLAGS) $(ISET_SRC)
+
+$(addsuffix _aid,$(METHODS)): res_testing_cg.cc
+	$(CC) -DAID  -DALL_ITERATIONS $(addprefix -Df,$(subst _AID,,$(shell echo $@ | tr a-z A-Z))) -o $@ res_testing_cg.cc $(RB_SRC) $(CFLAGS) -I$(SRC_HOME)/inc/$(subst _aid,,$@) $(LFLAGS) $(ISET_SRC) -L$(AIDHOME)/SDC/lib -lsdc_aid -L$(MPILIB) -lmpi -I$(AIDHOME)/SDC/include
+
+$(addsuffix _gagan,$(METHODS)): res_testing_cg.cc
+	$(CC) -DGAGAN -DALL_ITERATIONS $(addprefix -Df,$(subst _GAGAN,,$(shell echo $@ | tr a-z A-Z))) -o $@ res_testing_cg.cc $(RB_SRC) $(CFLAGS) -I$(SRC_HOME)/inc/$(subst _gagan,,$@) $(LFLAGS) $(ISET_SRC)
+
+$(addsuffix _ssd,$(METHODS)): res_testing_cg.cc
+	    $(CC) -DSSD  -DALL_ITERATIONS -DSSD_PROTECT_R -DALL_ITERATIONS $(addprefix -Df,$(subst _SSD,,$(shell echo $@ | tr a-z A-Z))) -o $@ res_testing_cg.cc $(RB_SRC) $(CFLAGS) -I$(SRC_HOME)/inc/$(subst _ssd,,$@) $(LFLAGS) $(ISET_SRC) -L$(SSDPATH)/SDC/lib -lsdc_ssd -L$(MPILIB) -lmpi -I$(SSDPATH)/SDC/include 
+#$(JAVAFLAG)
+
+$(addsuffix _newsum,$(METHODS)): res_testing_cg.cc
+	    $(CC) -DNEWSUM -DALL_ITERATIONS $(addprefix -Df,$(subst _NEWSUM,,$(shell echo $@ | tr a-z A-Z))) -o $@ res_testing_cg.cc $(RB_SRC) $(CFLAGS) -I$(SRC_HOME)/inc/$(subst _newsum,,$@) $(LFLAGS) $(ISET_SRC)
+
+$(addsuffix _svm,$(METHODS)): res_testing_cg.cc
+	    $(CC) -DVERIFY -DSVM $(addprefix -Df,$(subst _SVM,,$(shell echo $@ | tr a-z A-Z))) -o $@ res_testing_cg.cc $(RB_SRC) $(CFLAGS) -I$(SRC_HOME)/inc/$(subst _svm,,$@) $(LFLAGS) $(ISET_SRC)
+
+$(addsuffix _collect,$(METHODS)): res_testing_cg.cc
+	    $(CC) -DVERIFY -DCOLLECT_DATA $(addprefix -Df,$(subst _COLLECT,,$(shell echo $@ | tr a-z A-Z))) -o $@ res_testing_cg.cc $(RB_SRC) $(CFLAGS) -I$(SRC_HOME)/inc/$(subst _collect,,$@) $(LFLAGS) $(ISET_SRC)
+
+cg_orth: res_testing_cg.cc
+	$(CC) -DfCG -DORTH -DALL_ITERATIONS -o cg_orth res_testing_cg.cc $(RB_SRC) $(CFLAGS) $(LFLAGS) -I$(SRC_HOME)/inc/cg $(ISET_SRC)
+	$(CC) -DfICCG -DORTH -o iccg_orth res_testing_cg.cc $(RB_SRC) $(CFLAGS) $(LFLAGS) -I$(SRC_HOME)/inc/iccg $(ISET_SRC)
+	$(CC) -DfBICG -DORTH -o bicg_orth res_testing_cg.cc $(RB_SRC) $(CFLAGS) $(LFLAGS) -I$(SRC_HOME)/inc/bicg $(ISET_SRC) 
+
+clean: 
+	rm -f $(METHODS) $(addsuffix _aid,$(METHODS)) $(addsuffix _gagan,$(METHODS)) $(addsuffix _ssd,$(METHODS)) $(addsuffix _newsum,$(METHODS)) $(addsuffix _svm,$(METHODS)) $(addsuffix _collect,$(METHODS)) *.o *.txt *.csv cg_orth iccg_orth bicg_orth

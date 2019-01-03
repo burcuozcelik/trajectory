@@ -1,0 +1,12 @@
+%-------------------------------------------------------------------------------
+% UF Sparse Matrix Collection, Tim Davis
+% http://www.cise.ufl.edu/research/sparse/matrices/MathWorks/Muu
+% name: MathWorks/Muu
+% [The MathWorks, Inc: symmetric positive definite matrix]
+% id: 1331
+% date: 2006
+% author: B. Cheng
+% ed: T. Davis
+% fields: name title A id date author ed kind
+% kind: structural problem
+%-------------------------------------------------------------------------------

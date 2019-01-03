@@ -1,0 +1,15 @@
+%-------------------------------------------------------------------------------
+% UF Sparse Matrix Collection, Tim Davis
+% http://www.cise.ufl.edu/research/sparse/matrices/Schenk_AFE/af_shell3
+% name: Schenk_AFE/af_shell3
+% [Olaf Schenk, Univ. Basel: AutoForm Eng. GmbH, Zurich. sheet metal forming. positive definite]
+% id: 942
+% date: 2003
+% author: AutoForm Eng.
+% ed: O. Schenk
+% fields: name title A Zeros b id kind notes date author ed
+% kind: subsequent structural problem
+%-------------------------------------------------------------------------------
+% notes:
+% next: Schenk_AFE/af_shell4 first: Schenk_AFE/af_shell1
+%-------------------------------------------------------------------------------

@@ -1,0 +1,12 @@
+--5 percent chunks
+SELECT CAST((itr_percentage)*20 as INTEGER)*5 as lowerbound,
+
+	SUM(CASE WHEN adverse THEN weight ELSE 0.0 END)/sum(weight)*100  as adverseSum,
+	SUM(CASE WHEN masked THEN weight ELSE 0.0 END)/sum(weight)*100  as maskedSum,
+	SUM(CASE WHEN anomaly_conv THEN weight ELSE 0.0 END)/sum(weight)*100  as anomConvSum,
+	SUM(CASE WHEN anomaly_noconv THEN weight ELSE 0.0 END)/sum(weight)*100 as anomNoConvSum,
+	SUM(CASE WHEN fast_conv THEN weight ELSE 0.0 END)/sum(weight)*100  as fastConvSum,
+	SUM(CASE WHEN fast_noconv THEN weight ELSE 0.0 END)/sum(weight)*100  as fastNoConvSum
+           FROM injection_data
+           GROUP  BY lowerbound
+           ORDER BY lowerbound ;

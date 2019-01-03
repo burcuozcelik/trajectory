@@ -1,0 +1,12 @@
+%-------------------------------------------------------------------------------
+% UF Sparse Matrix Collection, Tim Davis
+% http://www.cise.ufl.edu/research/sparse/matrices/Okunbor/aft01
+% name: Okunbor/aft01
+% [Acoustic Radiation around aft duct fan. D. Okunbor, Univ Missouri-Rolla]
+% id: 791
+% date: 2001
+% author: W. Eversman, D. Okunbor
+% ed: T. Davis
+% fields: title A name id date author ed kind
+% kind: acoustics problem
+%-------------------------------------------------------------------------------

@@ -1,0 +1,9 @@
+**/configs
+**/SparseLib++
+**/README.pnnl
+**/readRB
+**/*.rb
+**/*.dat
+**/*.json
+**/.svn
+**/scripts/parser/sbatchs_multi

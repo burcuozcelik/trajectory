@@ -1,0 +1,93 @@
+import os
+import sys
+from sys import argv
+
+cg_home = "/Users/mutl832/Desktop/CG_Versions/CG_versions"
+dname = cg_home + "/results/mlpredict/results/"
+rname = cg_home + "/results/mlpredict/jsons/"
+
+if len(argv) < 3:
+        print("Usage: Solver Dataset")
+        sys.exit(1)
+
+sol = argv[1]
+ds = argv[2]
+
+
+jsontext = ""
+j2text = ""
+outjson = rname + sol + "_" + ds + ".json"
+print outjson
+DataPathVal = dname + sol + "/" + ds + "/"
+tp,tn,fp,fn,ep,en,tot = 0,0,0,0,0,0,0
+for(path, dirs, outfiles) in [next(os.walk(DataPathVal))]:
+        for f in outfiles:
+                passed,prediction,activation,when,iters,posit,statement,vector,bits,baseiter,tot_itr = "0","-2","-1","-1","-1","-1","-1","-1","-1","-1","-1"
+                with open(os.path.join(DataPathVal, f), "rb") as fl:
+                        lines = fl.readlines()
+                        for line in lines:
+                                if("PASSED" in line):
+                                        passed = "1"
+                                elif ("Activation" in line):
+                                        activation = line[22:-1:]
+                                elif ("Baseline iterations" in line):
+                                        baseiter = line[21:-1:]
+                                elif ("when" in line):
+                                        when = line[34:-1:]
+                                elif ("iterations performed" in line):
+                                        iters = line[22:-1:]
+                                elif ("where" in line):
+                                        posit = line[25:-1:]
+                                elif ("statements" in line):
+                                        stmt = line[24:-1:]
+                                elif ("vectors" in line):
+                                        vector = line[21:-1:]
+                                elif ("Bit flips" in line):
+                                        bits = line[11:-1:]
+				elif ("Prediction" in line):
+					prediction = line[12:-1:]
+
+                if( iters == "-1"):
+                        print "NO DATA:" + f + "\n"
+                        continue
+
+
+#                id += 1
+
+#                jline = '{"id":' + str(id) + ', "solver":"' + sol + '","ds":"' + ds + '","stmt":' + stmt + ',"vec":' + vector + ',"inj_itr":' + when + ',"vec_pos":' + posit + ',"err_dist":' + dn + ',"num_bits":' + bitnum + ',"bit_pos":"' + bits +'","tot_itr":'+ iters + '"base_itr":'+ baseiter  +'"activation":' + activation  + ',"masked":' + passed + ',"weight":' + str(wgt) +',"vec_size":'+ str(n) + ',"filename":"'+ f +'"}'
+
+#                jsontext += jline + '\n'
+		
+		j2line = '{"fname":"' + f + ', "passed":' + passed + ', "prediction":' + prediction + ', "expected iter":' + baseiter + '. "final iter":' + iters + '}\n'
+		j2text += j2line
+		
+		if passed == "1":
+			if prediction == "1":
+				tp +=1
+			elif prediction == "0":
+				fn  +=1
+			elif prediction == "-1":
+				fn += 1
+			else:
+				ep +=1
+		else:
+			if prediction == "1":
+				fp +=1
+			elif prediction == "0":
+				tn +=1
+			elif prediction == "-1":
+				tn +=1
+			else:
+				en +=1
+		tot +=1
+
+ 
+			
+		
+
+totline = "total:" + str(tot) + "\n" + "tp:" + str(tp) + "\n" + "fp:" + str(fp) + "\n" + "fn:" + str(fn) + "\n" + "tn:" + str(tn) + "\n" + "ep:" + str(ep) + "\n" + "en:" + str(en) + "\n"
+with open( outjson, 'w') as j:
+        j.write(j2text)
+	j.write(totline)
+	
+

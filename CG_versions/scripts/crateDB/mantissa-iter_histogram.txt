@@ -1,0 +1,11 @@
+--to change it to sign or exponent, change the condition inside the from subquery
+select cast(((s.itr_percentage)*20) as INTEGER)*5 as lowbound,
+	sum(CASE WHEN s.adverse THEN s.weight ELSE 0.0 END)/sum(s.weight)*100  as adverseSum,
+	sum(CASE WHEN s.masked THEN s.weight ELSE 0.0 END)/sum(s.weight)*100  as maskedSum,
+	sum(CASE WHEN s.anomaly_conv THEN s.weight ELSE 0.0 END)/sum(s.weight)*100  as anomConvSum,
+	sum(CASE WHEN s.anomaly_noconv THEN s.weight ELSE 0.0 END)/sum(s.weight)*100  as anomNoConvSum,
+	sum(CASE WHEN s.fast_conv THEN s.weight ELSE 0.0 END)/sum(s.weight)*100  as fastConvSum,
+	sum(CASE WHEN s.fast_noconv THEN s.weight ELSE 0.0 END)/sum(s.weight)*100  as fastNoConvSum
+           from ( SELECT * FROM injection_data WHERE (num_bits = 1 and CAST(bit_pos as INTEGER) <= 51)) s
+           group by lowbound
+           ORDER BY lowbound;

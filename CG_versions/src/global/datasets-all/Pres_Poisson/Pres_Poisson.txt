@@ -1,0 +1,12 @@
+%-------------------------------------------------------------------------------
+% UF Sparse Matrix Collection, Tim Davis
+% http://www.cise.ufl.edu/research/sparse/matrices/ACUSIM/Pres_Poisson
+% name: ACUSIM/Pres_Poisson
+% [ACUSIM, Inc: computational fluid dynamics problem]
+% id: 1184
+% date: 2004
+% author: F. Shakib
+% ed: T. Davis
+% fields: A name title b id date author ed kind
+% kind: computational fluid dynamics problem
+%-------------------------------------------------------------------------------

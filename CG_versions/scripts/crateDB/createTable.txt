@@ -1,0 +1,24 @@
+--create injection_data
+create table injection_data (                                                                                                                
+        id int PRIMARY KEY,                                                                                                                      
+        solver STRING,                                                                                                                           
+        dataset STRING,                                                                                                                          
+        stmt INT,                                                                                                                                
+        vec INT,                                                                                                                                 
+        inj_itr INT,                                                                                                                             
+        vec_pos INT,                                                                                                                             
+        err_dist INT,                                                                                                                            
+        num_bits INT,                                                                                                                            
+        bit_pos STRING,                                                                                                                          
+        total_itr INT,                                                                                                                           
+        base_itr DOUBLE,                                                                                                                         
+        masked boolean,                                                                                                                          
+        activation INT,                                                                                                                          
+        weight DOUBLE,                                                                                                                           
+        itr_percentage AS (inj_itr / base_itr),                                                                                                  
+        fast_conv AS (masked != true and activation = -1 and total_itr < base_itr),                                                              
+        fast_noconv AS (masked != true and activation <= base_itr and activation > 0),                                                           
+        anomaly_conv AS (masked != true and activation = -1 and total_itr > base_itr and total_itr <= (2*base_itr)),                             
+        anomaly_noconv AS (masked != true and activation > base_itr and activation <= (2*base_itr)),                                             
+        adverse AS (masked != true and ( activation > (2*base_itr) or (activation = -1 and total_itr > 2*base_itr)))                             
+        );        

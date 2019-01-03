@@ -1,0 +1,12 @@
+%-------------------------------------------------------------------------------
+% UF Sparse Matrix Collection, Tim Davis
+% http://www.cise.ufl.edu/research/sparse/matrices/HB/bcsstk15
+% name: HB/bcsstk15
+% [S  STIFFNESS MATRIX - MODULE OF AN OFFSHORE PLATFORM]
+% id: 37
+% date: 1985
+% author: M. Will
+% ed: I. Duff, R. Grimes, J. Lewis
+% fields: title A name id date author ed kind
+% kind: structural problem
+%-------------------------------------------------------------------------------

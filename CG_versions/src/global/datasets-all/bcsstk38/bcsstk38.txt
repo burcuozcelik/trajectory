@@ -1,0 +1,12 @@
+%-------------------------------------------------------------------------------
+% UF Sparse Matrix Collection, Tim Davis
+% http://www.cise.ufl.edu/research/sparse/matrices/Boeing/bcsstk38
+% name: Boeing/bcsstk38
+% [STIFFNESS MATRIX, AIRPLANE ENGINE COMPONENT]
+% id: 343
+% date: 1995
+% author: R. Grimes
+% ed: T. Davis
+% fields: title A name id date author ed kind
+% kind: structural problem
+%-------------------------------------------------------------------------------

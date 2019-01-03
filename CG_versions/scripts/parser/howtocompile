@@ -1,0 +1,1 @@
+g++ -shared -fPIC -I/people/kest268/installed/miniconda2/include/python2.7/ -L/people/kest268/installed/miniconda2/lib/ -lpython2.7 -o timingModule.so timing.c 
