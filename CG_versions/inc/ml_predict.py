@@ -5,8 +5,8 @@ import pickle
 import pandas as pd
 
 
-dirname = "/Users/mutl832/Desktop/CG_Versions/CG_versions/Convergence/"
-models_home= "/Users/mutl832/Desktop/CG_Versions/CG_versions/results/mlpredict/models/"
+dirname = "/Users/mutl832/Desktop/git-CG/trajectory/CG_versions/Convergence/"
+models_home= "/Users/mutl832/Desktop/git-CG/trajectory/CG_versions/results/mlpredict/models/"
 exp_list = {}
 interval = 5
 dsmap = {}

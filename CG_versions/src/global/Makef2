@@ -1,19 +1,19 @@
 CC = g++
 
 ifndef SRC_HOME
-SRC_HOME=/Users/mutl832/Desktop/CG_Versions/CG_versions
+SRC_HOME=/Users/mutl832/Desktop/git-CG/trajectory/CG_versions
 endif
 
 ifndef AIDHOME
-AIDHOME=/Users/mutl832/Desktop/CG_Versions/CG_versions
+AIDHOME=/Users/mutl832/Desktop/git-CG/trajectory/CG_versions
 endif
 
 ifndef MPILIB
-MPILIB=/Users/mutl832/Desktop/CG_Versions/CG_versions
+MPILIB=/Users/mutl832/Desktop/git-CG/trajectory/CG_versions
 endif
 
 CFLAGS = -I$(SRC_HOME)/readRB/ -I$(SRC_HOME)/inc -I$(SRC_HOME)/SparseLib++/1.7/include -I$(SRC_HOME)/SparseLib++/1.7/mv/include -std=c++11 '-DMCOMPLEX=std::complex<double>' '-DCOMPLEX=std::complex<double>' -g -O2 -DNO_RHS -DINSERT_MULTIBF_FAULT
-HAMA_CFLAGS = -I$(SRC_HOME)/readRB/ -I$(SRC_HOME)/inc -I$(SRC_HOME)/SparseLib++/1.7/include -I$(SRC_HOME)/SparseLib++/1.7/mv/include -std=c++11 '-DMCOMPLEX=std::complex<double>' '-DCOMPLEX=std::complex<double>' -g -DNO_RHS -DINSERT_MULTIBF_FAULT
+HAMA_CFLAGS = -I$(SRC_HOME)/readRB/ -I$(SRC_HOME)/inc -I$(SRC_HOME)/SparseLib++/1.7/include -I$(SRC_HOME)/SparseLib++/1.7/mv/include -std=c++11 '-DMCOMPLEX=std::complex<double>' '-DCOMPLEX=std::complex<double>' -g -DNO_RHS -DINSERT_MULTIBF_FAULT -g
 #-DINSERT_SINGLEBF_FAULT
 #-DINSERT_MULTIBF_FAULT
 LFLAGS = -L$(SRC_HOME)/SparseLib++/1.7/lib -lsparse -lspblas -lmv -lm
@@ -82,4 +82,4 @@ cg_orth: res_testing_cg.cc
 	$(CC) -DfBICG -DORTH -o bicg_orth res_testing_cg.cc $(RB_SRC) $(CFLAGS) $(LFLAGS) -I$(SRC_HOME)/inc/bicg $(ISET_SRC) 
 
 clean: 
-	rm -f $(METHODS) $(addsuffix _aid,$(METHODS)) $(addsuffix _gagan,$(METHODS)) $(addsuffix _ssd,$(METHODS)) $(addsuffix _newsum,$(METHODS)) $(addsuffix _svm,$(METHODS)) $(addsuffix _collect,$(METHODS)) $(addsuffix _converge,$(METHODS)) $(addsuffix _component,$(METHODS)) $(addsuffix _hamartia,$(METHODS)) *.o *.txt *.csv cg_orth iccg_orth bicg_orth
+	rm -f $(METHODS) $(addsuffix _aid,$(METHODS)) $(addsuffix _gagan,$(METHODS)) $(addsuffix _ssd,$(METHODS)) $(addsuffix _newsum,$(METHODS)) $(addsuffix _svm,$(METHODS)) $(addsuffix _collect,$(METHODS)) $(addsuffix _converge,$(METHODS)) $(addsuffix _component,$(METHODS)) $(addsuffix _hamartia,$(METHODS)) $(addsuffix _mlpredict,$(METHODS)) *.o *.txt *.csv cg_orth iccg_orth bicg_orth

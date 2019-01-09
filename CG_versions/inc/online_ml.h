@@ -5,6 +5,9 @@
 
 //#include </share/apps/python/2.7.2/include/python2.7/Python.h>
 #include <Python/Python.h>
+#include <fstream>
+#include <sstream>
+
 
 extern double err_margin;
 extern int ivecid;
@@ -17,7 +20,9 @@ extern std::string bfstr;
 extern char* sol;
 extern char dsname[2048];
 extern std::string pkl_name;
+extern ifstream base_f;
 std::string fname="";
+#define isclose(a, b) std::abs(a-b) <= std::max(1e-30 * std::max(std::abs(a), std::abs(b)), 0.0)
 
 template <class Vector>
 void backup_vector(Vector src, Vector dest){
@@ -66,11 +71,117 @@ void print_data(Vector x5,Vector r5,Vector p5,Vector x10,Vector r10,Vector p10,V
   }
 }
 
+template <class Vector>
+float calculate_marginal_difference(Vector avec, Vector bvec){
+  float diff = 0.0;
+  for(int i=0; i<avec.dim(); i++){
+    if(isclose(avec[i],bvec[i]))
+      continue;
+    else if(isclose(avec[i],0.0)){
+      if(isclose(bvec[i],0.0))
+	continue;
+      else
+	diff += std::abs((bvec[i]-avec[i])/bvec[i]);
+    }
+    else
+      diff += std::abs((avec[i]-bvec[i])/avec[i]);
+  }
+  return diff;
+}
+
+template <class Vector>
+Vector calculate_data(Vector x5,Vector r5,Vector p5,Vector x10,Vector r10,Vector p10,Vector x20,Vector r20,Vector p20){  
+  printf("calculate_data\n");
+  Vector diffs(9, 1e15);// 0..2 x, 3..5 p, 6..8 r , 5-10-20
+  int inds[9] = {-1,-1,-1,-1,-1,-1,-1,-1,-1};
+  Vector tmp_base(x5.dim());
+  std::string s,item;
+  Vector *v20,*v10,*v5;
+  //x -> p -> r -> x -> p ...
+  for (int i=0; i<168; i++){
+    std::getline(base_f, s);
+    if(base_f.eof()){
+      break;
+    }
+    if(s.find("vector") == std::string::npos){
+      break;
+    }  
+    std::istringstream iss(s);
+    std::getline(iss, item, ';');
+    string vecname = item;
+    std::getline(iss, item, ';');
+    int curitr = std::stoi(item);
+ 
+    //get curitr base vector 
+    int vecindex = 0;
+    while (std::getline(iss, item, ';')){
+      tmp_base[vecindex] = std::stof(item);
+      vecindex++;
+    }
+    int diffindex=-1;
+    if(vecname == "x_vector"){
+      v20 = &x20;
+      v10 = &x10;
+      v5 = &x5;
+      diffindex = 0;
+    }
+    else if (vecname == "p_vector"){
+      v20 = &p20;
+      v10 = &p10;
+      v5 = &p5;
+      diffindex = 3;
+    }
+    else if (vecname == "r_vector"){
+      v20 = &r20;
+      v10 = &r10;
+      v5 = &r5;
+      diffindex = 6;
+    }
+    //    printf("%1.16f\n",tmp_base[0]);
+    
+    float cur_diff;
+    if(curitr >= iiternum && curitr <= iiternum + 40){
+      //(xpr)20
+      printf("20 %s did:%d curitr:%i ", vecname.c_str(), diffindex, curitr);
+      cur_diff = calculate_marginal_difference(*v20,tmp_base);
+      printf("curdiff returned:%1.16f, overall diff: %1.16f\n", cur_diff, diffs[diffindex+2]);
+      if( cur_diff < diffs[diffindex+2] ){
+	inds[diffindex+2] = curitr;
+	diffs[diffindex+2] = cur_diff;
+	//	printf("inds[%d]=%d is it? %f\n",diffindex+2,curitr,inds[diffindex+2]);
+      }
+      //printf("overall diff: %1.16f \n", diffs[diffindex+2]);
+    } 
+    if(curitr >= iiternum-10 && curitr <= iiternum + 30){
+      //(xpr)10
+      cur_diff = calculate_marginal_difference(*v10,tmp_base);
+      if(cur_diff < diffs[diffindex+1]){
+	inds[diffindex+1] = curitr;
+	diffs[diffindex+1] = cur_diff;
+      }
+    }
+    if(curitr >= iiternum-5 && curitr <= iiternum + 25){
+      //(xpr)x5
+      cur_diff = calculate_marginal_difference(*v5,tmp_base);
+      if(cur_diff < diffs[diffindex]){
+	inds[diffindex] = curitr;
+	diffs[diffindex] = cur_diff;
+      }
+    }
+    if(curitr > iiternum + 40)
+      break;    
+  }
+  printf("%d,%d,%d,%d,%d,%d,%d,%d,%d\n", inds[0],inds[1],inds[2],inds[3],inds[4],inds[5],inds[6],inds[7],inds[8]);
+  printf("%1.16f,%1.16f,%1.16f,%1.16f,%1.16f,%1.16f,%1.16f,%1.16f,%1.16f\n",diffs[0],diffs[1],diffs[2],diffs[3],diffs[4],diffs[5],diffs[6],diffs[7],diffs[8]);
+  return diffs;
+}
+
 
 template <class Vector>
 int ml_predict(Vector x5,Vector r5,Vector p5,Vector x10,Vector r10,Vector p10,Vector x20,Vector r20,Vector p20){
   print_data(x5,r5,p5,x10,r10,p10,x20,r20,p20);
-  //instead of print data call calculate data 
+  //instead of print data call calculate data
+  Vector diffs = calculate_data(x5,r5,p5,x10,r10,p10,x20,r20,p20);
   
   PyObject *pName, *pModule, *pDict, *pFunc, *pValue, *pArgs;
   // Initialize the Python Interpreter
@@ -105,9 +216,9 @@ int ml_predict(Vector x5,Vector r5,Vector p5,Vector x10,Vector r10,Vector p10,Ve
       PyTuple_SetItem(pArgs, 0, PyString_FromString(fname.c_str())); 
       PyTuple_SetItem(pArgs, 1, PyString_FromString(pkl_name.c_str()));
       //send the values calculated 
-      //PyTuple_SetItem(pArgs, 2, PyFloat_FromDouble(x5m));
-      //PyTuple_SetItem(pArgs, 3, PyFloat_FromDouble(p5m));
-      //PyTuple_SetItem(pArgs, 4, PyFloat_FromDouble(r5m));
+      //PyTuple_SetItem(pArgs, 2, PyFloat_FromDouble(diffs[0]));
+      //PyTuple_SetItem(pArgs, 3, PyFloat_FromDouble(diffs[1]));
+      //PyTuple_SetItem(pArgs, 4, PyFloat_FromDouble(diffs[2]));
       //PyTuple_SetItem(pArgs, 5, PyFloat_FromDouble(x10m));
       //PyTuple_SetItem(pArgs, 6, PyFloat_FromDouble(p10m));
       //PyTuple_SetItem(pArgs, 7, PyFloat_FromDouble(r10m));

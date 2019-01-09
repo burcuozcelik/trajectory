@@ -1,5 +1,7 @@
 #include <cstdlib>                      // System includes
 #include <iostream>                    // 
+#include <fstream>
+#include <string>
 #include <sys/time.h>
 #include <stdlib.h> 
 #include <cmath>
@@ -38,6 +40,7 @@ int istatnum;
 int ivecid;  
 double err_margin=-1;
 char dsname[2048];
+ifstream base_f;
 #endif
 
 #if defined(COLLECT_DATA)
@@ -425,6 +428,7 @@ main(int argc, char * argv[])
      bfstr += "_";
      bfstr += argv[arg_num+ibf];
    }
+   
    #endif
 #endif
 
@@ -473,6 +477,24 @@ main(int argc, char * argv[])
   printf ("Using dataset: %s\n", name);
   /*strcat(name, "rb");*/
   strcpy(dsname,name);
+#ifdef ML_PREDICT
+  if(isinsert){
+    //open basefile and go to necessary point if injecting error
+    //SRC_HOME/Convergence/baseline/cg/ex13/cg_ex13_baseline.dat    
+    string basefilename = "../../Convergence/baseline/" +  std::string(sol) + "/" + dsname + "/" + sol + "_" + name + "_baseline.dat";
+    base_f.open(basefilename);
+    string s;
+    //5 info lines before data starts 
+    //if injection+5 is before 21th iteration, we start comparison from 0th iteration
+    //*3 for each iteration data we skip because we have 3 lines of data for each iteration
+    //-1 so that next getline() will get the right line
+    int gotoline = 5 + (iiternum+5-21>=0?iiternum+5-21:0) * 3 - 1;
+    for (int i = 0; i <= gotoline; i++)
+      std::getline(base_f, s);
+  }
+
+
+#endif
   
   VECTOR_double b, tx(A.dim(1), 1.0), x(A.dim(1), 0.0);
 #ifdef NO_RHS   
