@@ -142,9 +142,9 @@ Vector calculate_data(Vector x5,Vector r5,Vector p5,Vector x10,Vector r10,Vector
     float cur_diff;
     if(curitr >= iiternum && curitr <= iiternum + 40){
       //(xpr)20
-      printf("20 %s did:%d curitr:%i ", vecname.c_str(), diffindex, curitr);
+      //      printf("20 %s did:%d curitr:%i ", vecname.c_str(), diffindex, curitr);
       cur_diff = calculate_marginal_difference(*v20,tmp_base);
-      printf("curdiff returned:%1.16f, overall diff: %1.16f\n", cur_diff, diffs[diffindex+2]);
+      //printf("curdiff returned:%1.16f, overall diff: %1.16f\n", cur_diff, diffs[diffindex+2]);
       if( cur_diff < diffs[diffindex+2] ){
 	inds[diffindex+2] = curitr;
 	diffs[diffindex+2] = cur_diff;
@@ -171,8 +171,8 @@ Vector calculate_data(Vector x5,Vector r5,Vector p5,Vector x10,Vector r10,Vector
     if(curitr > iiternum + 40)
       break;    
   }
-  printf("%d,%d,%d,%d,%d,%d,%d,%d,%d\n", inds[0],inds[1],inds[2],inds[3],inds[4],inds[5],inds[6],inds[7],inds[8]);
-  printf("%1.16f,%1.16f,%1.16f,%1.16f,%1.16f,%1.16f,%1.16f,%1.16f,%1.16f\n",diffs[0],diffs[1],diffs[2],diffs[3],diffs[4],diffs[5],diffs[6],diffs[7],diffs[8]);
+  //  printf("%d,%d,%d,%d,%d,%d,%d,%d,%d\n", inds[0],inds[1],inds[2],inds[3],inds[4],inds[5],inds[6],inds[7],inds[8]);
+  //printf("%1.16f,%1.16f,%1.16f,%1.16f,%1.16f,%1.16f,%1.16f,%1.16f,%1.16f\n",diffs[0],diffs[1],diffs[2],diffs[3],diffs[4],diffs[5],diffs[6],diffs[7],diffs[8]);
   return diffs;
 }
 
