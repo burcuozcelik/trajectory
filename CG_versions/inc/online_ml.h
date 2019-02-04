@@ -91,7 +91,7 @@ float calculate_marginal_difference(Vector avec, Vector bvec){
 
 template <class Vector>
 Vector calculate_data(Vector x5,Vector r5,Vector p5,Vector x10,Vector r10,Vector p10,Vector x20,Vector r20,Vector p20){  
-  printf("calculate_data\n");
+  //printf("calculate_data\n");
   Vector diffs(9, 1e15);// 0..2 x, 3..5 p, 6..8 r , 5-10-20
   int inds[9] = {-1,-1,-1,-1,-1,-1,-1,-1,-1};
   Vector tmp_base(x5.dim());
@@ -142,7 +142,7 @@ Vector calculate_data(Vector x5,Vector r5,Vector p5,Vector x10,Vector r10,Vector
     float cur_diff;
     if(curitr >= iiternum && curitr <= iiternum + 40){
       //(xpr)20
-      //      printf("20 %s did:%d curitr:%i ", vecname.c_str(), diffindex, curitr);
+      ///printf("20 %s did:%d curitr:%i ", vecname.c_str(), diffindex, curitr);
       cur_diff = calculate_marginal_difference(*v20,tmp_base);
       //printf("curdiff returned:%1.16f, overall diff: %1.16f\n", cur_diff, diffs[diffindex+2]);
       if( cur_diff < diffs[diffindex+2] ){
@@ -179,7 +179,7 @@ Vector calculate_data(Vector x5,Vector r5,Vector p5,Vector x10,Vector r10,Vector
 
 template <class Vector>
 int ml_predict(Vector x5,Vector r5,Vector p5,Vector x10,Vector r10,Vector p10,Vector x20,Vector r20,Vector p20){
-  print_data(x5,r5,p5,x10,r10,p10,x20,r20,p20);
+  //print_data(x5,r5,p5,x10,r10,p10,x20,r20,p20);
   //instead of print data call calculate data
   Vector diffs = calculate_data(x5,r5,p5,x10,r10,p10,x20,r20,p20);
   
@@ -187,7 +187,7 @@ int ml_predict(Vector x5,Vector r5,Vector p5,Vector x10,Vector r10,Vector p10,Ve
   // Initialize the Python Interpreter
   Py_Initialize();
   PyRun_SimpleString("import sys\n"
-		     "sys.path.insert(0, '/Users/mutl832/Desktop/CG_Versions/CG_versions/inc')");
+		     "sys.path.insert(0, '/Users/mutl832/Desktop/git-CG/trajectory/CG_versions/inc/')");
   // Build the name object
   pName = PyString_FromString((char*)"ml_predict");
 
@@ -205,29 +205,29 @@ int ml_predict(Vector x5,Vector r5,Vector p5,Vector x10,Vector r10,Vector p10,Ve
 
   // pDict is a borrowed reference 
   pDict = PyModule_GetDict(pModule);
-
+  
   // pFunc is also a borrowed reference 
   pFunc = PyDict_GetItemString(pDict, "predict");
   
   struct timeval pt0,pt1;
   if (PyCallable_Check(pFunc)) 
     {
-      pArgs = PyTuple_New(2);
-      PyTuple_SetItem(pArgs, 0, PyString_FromString(fname.c_str())); 
-      PyTuple_SetItem(pArgs, 1, PyString_FromString(pkl_name.c_str()));
+      pArgs = PyTuple_New(13);
+      fname+= std::string(sol) + "/" + pkl_name;
+      PyTuple_SetItem(pArgs, 0, PyString_FromString(fname.c_str()));
       //send the values calculated 
-      //PyTuple_SetItem(pArgs, 2, PyFloat_FromDouble(diffs[0]));
-      //PyTuple_SetItem(pArgs, 3, PyFloat_FromDouble(diffs[1]));
-      //PyTuple_SetItem(pArgs, 4, PyFloat_FromDouble(diffs[2]));
-      //PyTuple_SetItem(pArgs, 5, PyFloat_FromDouble(x10m));
-      //PyTuple_SetItem(pArgs, 6, PyFloat_FromDouble(p10m));
-      //PyTuple_SetItem(pArgs, 7, PyFloat_FromDouble(r10m));
-      //PyTuple_SetItem(pArgs, 8, PyFloat_FromDouble(x20m));
-      //PyTuple_SetItem(pArgs, 9, PyFloat_FromDouble(p20m));
-      //PyTuple_SetItem(pArgs, 10, PyFloat_FromDouble(r20m));      
-      //PyTuple_SetItem(pArgs, 11, PyFloat_FromDouble(err_margin));
-      //PyTuple_SetItem(pArgs, 12, PyFloat_FromDouble(itr_per));
-
+      PyTuple_SetItem(pArgs, 1, PyFloat_FromDouble(diffs[0]));
+      PyTuple_SetItem(pArgs, 2, PyFloat_FromDouble(diffs[1]));
+      PyTuple_SetItem(pArgs, 3, PyFloat_FromDouble(diffs[2]));
+      PyTuple_SetItem(pArgs, 4, PyFloat_FromDouble(diffs[3]));
+      PyTuple_SetItem(pArgs, 5, PyFloat_FromDouble(diffs[4]));
+      PyTuple_SetItem(pArgs, 6, PyFloat_FromDouble(diffs[5]));
+      PyTuple_SetItem(pArgs, 7, PyFloat_FromDouble(diffs[6]));
+      PyTuple_SetItem(pArgs, 8, PyFloat_FromDouble(diffs[7]));
+      PyTuple_SetItem(pArgs, 9, PyFloat_FromDouble(diffs[8]));      
+      PyTuple_SetItem(pArgs, 10, PyFloat_FromDouble(err_margin));
+      PyTuple_SetItem(pArgs, 11, PyFloat_FromDouble((iiternum*1.0)/iters));
+      PyTuple_SetItem(pArgs, 12, PyFloat_FromDouble(ivecid));
       gettimeofday(&pt0, 0);
       pValue = PyObject_CallObject(pFunc, pArgs);
       //PyObject_CallObject(pFunc, pArgs);
